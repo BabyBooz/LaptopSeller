@@ -11,6 +11,7 @@ import java.io.IOException;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     
+    // Hiển thị trang đăng nhập
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -21,10 +22,12 @@ public class LoginServlet extends HttpServlet {
         request.getRequestDispatcher("/views/login.jsp").forward(request, response);
     }
     
+    // Xử lý đăng nhập
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         

@@ -14,17 +14,18 @@ import java.util.List;
 @WebServlet("/my-orders")
 public class MyOrdersServlet extends HttpServlet {
     
+    // Hiển thị lịch sử đơn hàng của user
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User user = AuthUtil.getAuthenticatedUser(request);
         UserOrderDAO orderDAO = new UserOrderDAO();
-        
         String action = request.getParameter("action");
         
         if ("view".equals(action)) {
             int orderId = Integer.parseInt(request.getParameter("id"));
             List<OrderItem> orderItems = orderDAO.getOrderItems(orderId);
+            
             request.setAttribute("orderItems", orderItems);
             request.setAttribute("orderId", orderId);
             request.setAttribute("user", user);

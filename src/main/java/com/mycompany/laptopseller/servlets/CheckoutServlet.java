@@ -15,6 +15,7 @@ import java.util.List;
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
     
+    // Xử lý thanh toán và tạo đơn hàng
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

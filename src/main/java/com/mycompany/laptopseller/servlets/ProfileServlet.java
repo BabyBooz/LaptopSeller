@@ -11,6 +11,7 @@ import java.io.IOException;
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
     
+    // Hiển thị trang thông tin cá nhân
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -19,10 +20,12 @@ public class ProfileServlet extends HttpServlet {
         request.getRequestDispatcher("/views/profile.jsp").forward(request, response);
     }
     
+    // Cập nhật thông tin cá nhân
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        
         User currentUser = AuthUtil.getAuthenticatedUser(request);
         
         String rollNumber = request.getParameter("rollNumber");
@@ -44,8 +47,8 @@ public class ProfileServlet extends HttpServlet {
         }
         
         UserDAO userDAO = new UserDAO();
+        
         if (userDAO.updateUser(currentUser)) {
-            // Update session with new user data
             AuthUtil.setAuthUser(request, currentUser);
             request.setAttribute("success", "Cập nhật thông tin thành công");
         } else {

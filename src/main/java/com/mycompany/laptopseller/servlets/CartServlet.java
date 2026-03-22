@@ -16,6 +16,7 @@ import java.util.List;
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
     
+    // Hiển thị giỏ hàng
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -39,6 +40,7 @@ public class CartServlet extends HttpServlet {
         request.getRequestDispatcher("/views/cart.jsp").forward(request, response);
     }
     
+    // Thêm/cập nhật/xóa sản phẩm trong giỏ
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

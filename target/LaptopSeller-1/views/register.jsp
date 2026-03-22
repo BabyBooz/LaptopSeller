@@ -18,11 +18,6 @@
             
             <form method="post" action="${pageContext.request.contextPath}/register">
                 <div class="form-group">
-                    <label>Mã số:</label>
-                    <input type="text" name="rollNumber" required>
-                </div>
-                
-                <div class="form-group">
                     <label>Họ và tên:</label>
                     <input type="text" name="fullName" required>
                 </div>

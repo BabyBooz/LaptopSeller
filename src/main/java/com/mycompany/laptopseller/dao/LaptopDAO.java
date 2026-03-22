@@ -127,4 +127,25 @@ public class LaptopDAO {
         laptop.setCategoryName(rs.getString("category_name"));
         return laptop;
     }
+
+    public List<Laptop> getLaptopsByCategory(int categoryId) {
+        List<Laptop> laptops = new ArrayList<>();
+        String sql = "SELECT l.*, b.name as brand_name, c.name as category_name " +
+                     "FROM laptops l " +
+                     "LEFT JOIN brands b ON l.brand_id = b.brand_id " +
+                     "LEFT JOIN categories c ON l.category_id = c.category_id " +
+                     "WHERE l.status = 1 AND l.category_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, categoryId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                laptops.add(extractLaptop(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return laptops;
+    }
+
 }

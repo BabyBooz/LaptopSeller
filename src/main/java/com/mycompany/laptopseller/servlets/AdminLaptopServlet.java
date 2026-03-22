@@ -23,12 +23,13 @@ import java.util.UUID;
 
 @WebServlet("/admin/laptops")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024 * 2,  // 2MB
-    maxFileSize = 1024 * 1024 * 10,       // 10MB
-    maxRequestSize = 1024 * 1024 * 50     // 50MB
+    fileSizeThreshold = 1024 * 1024 * 2,
+    maxFileSize = 1024 * 1024 * 10,
+    maxRequestSize = 1024 * 1024 * 50
 )
 public class AdminLaptopServlet extends HttpServlet {
     
+    // Hiển thị danh sách laptop
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -45,9 +46,11 @@ public class AdminLaptopServlet extends HttpServlet {
         request.setAttribute("laptops", laptops);
         request.setAttribute("brands", brands);
         request.setAttribute("categories", categories);
+        
         request.getRequestDispatcher("/views/admin/laptops.jsp").forward(request, response);
     }
     
+    // Thêm/sửa/xóa laptop
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -64,10 +67,8 @@ public class AdminLaptopServlet extends HttpServlet {
             laptop.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
             laptop.setStatus("1".equals(request.getParameter("status")));
             
-            // Upload image
             String imageUrl = uploadImage(request);
             laptop.setImageUrl(imageUrl != null ? imageUrl : "default.jpg");
-            
             laptopDAO.addLaptop(laptop);
             
         } else if ("edit".equals(action)) {
@@ -80,7 +81,6 @@ public class AdminLaptopServlet extends HttpServlet {
             laptop.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
             laptop.setStatus("1".equals(request.getParameter("status")));
             
-            // Upload new image or keep old one
             String imageUrl = uploadImage(request);
             if (imageUrl != null) {
                 laptop.setImageUrl(imageUrl);
@@ -98,9 +98,9 @@ public class AdminLaptopServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/admin/laptops");
     }
     
+    // Upload ảnh và trả về tên file
     private String uploadImage(HttpServletRequest request) throws IOException, ServletException {
         Part filePart = request.getPart("image");
-        
         if (filePart == null || filePart.getSize() == 0) {
             return null;
         }
@@ -109,7 +109,6 @@ public class AdminLaptopServlet extends HttpServlet {
         String fileExtension = fileName.substring(fileName.lastIndexOf("."));
         String newFileName = UUID.randomUUID().toString() + fileExtension;
         
-        // Get the real path to webapp/images directory
         String uploadPath = getServletContext().getRealPath("") + File.separator + "images";
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {

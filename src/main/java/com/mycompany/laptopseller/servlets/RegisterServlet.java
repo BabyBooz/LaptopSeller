@@ -10,12 +10,14 @@ import java.io.IOException;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     
+    // Hiển thị trang đăng ký
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("/views/register.jsp").forward(request, response);
     }
     
+    // Xử lý đăng ký tài khoản mới
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,7 +38,7 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
         
-        // Auto generate roll number
+        // Auto-generate roll number: CUST + timestamp
         String rollNumber = "CUST" + System.currentTimeMillis();
         
         User user = new User();

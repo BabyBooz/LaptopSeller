@@ -29,6 +29,7 @@ import java.util.UUID;
 )
 public class LaptopEditServlet extends HttpServlet {
     
+    // Hiển thị trang chỉnh sửa laptop
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
