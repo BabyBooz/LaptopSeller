@@ -33,7 +33,7 @@
     <div class="container">
         <div class="main-layout">
             <!-- Sidebar Filter -->
-            <div class="sidebar">
+            <aside class="sidebar">
                 <div class="card">
                     <h3><i class="fas fa-filter"></i> Lọc theo loại</h3>
                     <ul class="category-list">
@@ -53,10 +53,10 @@
                         </c:forEach>
                     </ul>
                 </div>
-            </div>
+            </aside>
             
             <!-- Main Content -->
-            <div class="main-content">
+            <main class="main-content">
                 <h1>Danh sách Laptop</h1>
                 
                 <c:if test="${empty laptops}">
@@ -87,7 +87,7 @@
                         </div>
                     </c:forEach>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
 </body>
