@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +29,8 @@ import java.util.UUID;
     maxRequestSize = 1024 * 1024 * 50
 )
 public class AdminLaptopServlet extends HttpServlet {
+    
+    private static final String UPLOAD_DIR = "images";
     
     // Hiển thị danh sách laptop
     @Override
@@ -98,7 +101,7 @@ public class AdminLaptopServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/admin/laptops");
     }
     
-    // Upload ảnh và trả về tên file
+    // Upload ảnh vào cả src và target
     private String uploadImage(HttpServletRequest request) throws IOException, ServletException {
         Part filePart = request.getPart("image");
         if (filePart == null || filePart.getSize() == 0) {
@@ -106,18 +109,63 @@ public class AdminLaptopServlet extends HttpServlet {
         }
         
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        String fileExtension = fileName.substring(fileName.lastIndexOf("."));
-        String newFileName = UUID.randomUUID().toString() + fileExtension;
         
-        String uploadPath = getServletContext().getRealPath("") + File.separator + "images";
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
+        // Kiểm tra định dạng file
+        String fileExtension = "";
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex > 0) {
+            fileExtension = fileName.substring(dotIndex).toLowerCase();
         }
         
-        Path filePath = Paths.get(uploadPath, newFileName);
-        Files.copy(filePart.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        if (!fileExtension.matches("\\.(jpg|jpeg|png|gif|webp)")) {
+            return null;
+        }
         
-        return newFileName;
+        // Tạo tên file unique
+        String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+        
+        // Lấy đường dẫn thực tế (target)
+        String realPath = getServletContext().getRealPath("/" + UPLOAD_DIR);
+        
+        System.out.println("=== UPLOAD DEBUG ===");
+        System.out.println("Real Path: " + realPath);
+        
+        // Tự động tìm đường dẫn src
+        String projectPath = realPath;
+        if (realPath.contains("target")) {
+            // Tìm vị trí của "target" và thay thế
+            int targetIndex = realPath.indexOf("target");
+            String basePath = realPath.substring(0, targetIndex);
+            projectPath = basePath + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + UPLOAD_DIR;
+        }
+        
+        System.out.println("Project Path: " + projectPath);
+        
+        // Tạo thư mục src/main/webapp/images nếu chưa tồn tại
+        File srcUploadDir = new File(projectPath);
+        if (!srcUploadDir.exists()) {
+            boolean created = srcUploadDir.mkdirs();
+            System.out.println("Created SRC directory: " + projectPath + " - Success: " + created);
+        }
+        
+        // Lưu file vào src/main/webapp/images
+        String srcFilePath = projectPath + File.separator + uniqueFileName;
+        try (InputStream input = filePart.getInputStream()) {
+            Files.copy(input, Paths.get(srcFilePath), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("File saved to SRC: " + srcFilePath);
+        }
+        
+        // Copy sang target/LaptopSeller/images để hiển thị ngay
+        File targetUploadDir = new File(realPath);
+        if (!targetUploadDir.exists()) {
+            boolean created = targetUploadDir.mkdirs();
+            System.out.println("Created TARGET directory: " + realPath + " - Success: " + created);
+        }
+        
+        String targetFilePath = realPath + File.separator + uniqueFileName;
+        Files.copy(Paths.get(srcFilePath), Paths.get(targetFilePath), StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("File copied to TARGET: " + targetFilePath);
+        
+        return uniqueFileName;
     }
 }
