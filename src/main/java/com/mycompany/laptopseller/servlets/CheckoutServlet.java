@@ -1,6 +1,7 @@
 package com.mycompany.laptopseller.servlets;
 
 import com.mycompany.laptopseller.dao.CartDAO;
+import com.mycompany.laptopseller.dao.LaptopDAO;
 import com.mycompany.laptopseller.dao.OrderDAO;
 import com.mycompany.laptopseller.models.Cart;
 import com.mycompany.laptopseller.models.CartItem;
@@ -22,6 +23,7 @@ public class CheckoutServlet extends HttpServlet {
         User user = AuthUtil.getAuthenticatedUser(request);
         CartDAO cartDAO = new CartDAO();
         OrderDAO orderDAO = new OrderDAO();
+        LaptopDAO laptopDAO = new LaptopDAO();
         
         Cart cart = cartDAO.getCartByUserId(user.getUserId());
         List<CartItem> cartItems = cartDAO.getCartItems(cart.getCartId());
@@ -33,7 +35,13 @@ public class CheckoutServlet extends HttpServlet {
         
         double totalPrice = cartItems.stream().mapToDouble(CartItem::getTotalPrice).sum();
         
+        // Tạo đơn hàng và trừ số lượng sản phẩm
         if (orderDAO.createOrder(user.getUserId(), cartItems, totalPrice)) {
+            // Trừ số lượng từng sản phẩm
+            for (CartItem item : cartItems) {
+                laptopDAO.decreaseQuantity(item.getLaptopId(), item.getQuantity());
+            }
+            
             cartDAO.clearCart(cart.getCartId());
             request.setAttribute("success", "Đặt hàng thành công!");
             request.getRequestDispatcher("/views/checkout-success.jsp").forward(request, response);

@@ -78,6 +78,11 @@
                 </div>
                 
                 <div class="form-group">
+                    <label><i class="fas fa-box"></i> Số lượng:</label>
+                    <input type="number" name="quantity" value="${laptop.quantity}" min="0" required>
+                </div>
+                
+                <div class="form-group">
                     <label>Hình ảnh hiện tại:</label>
                     <div style="background: #f5f5f5; padding: 10px; border-radius: 4px; text-align: center;">
                         <img src="${pageContext.request.contextPath}/images/${laptop.imageUrl}" 
@@ -88,7 +93,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Thay đổi hình ảnh (để trống nếu không đổi):</label>
+                    <label><i class="fas fa-image"></i> Thay đổi hình ảnh (để trống nếu không đổi):</label>
                     <input type="file" name="image" accept="image/*">
                 </div>
                 

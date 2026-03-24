@@ -11,6 +11,7 @@ public class Laptop {
     private String imageUrl;
     private String brandName;
     private String categoryName;
+    private int quantity;
     
     public Laptop() {}
     
@@ -43,4 +44,7 @@ public class Laptop {
     
     public String getCategoryName() { return categoryName; }
     public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+    
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 }

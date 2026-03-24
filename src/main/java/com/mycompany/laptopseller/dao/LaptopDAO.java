@@ -65,7 +65,7 @@ public class LaptopDAO {
     }
     
     public boolean addLaptop(Laptop laptop) {
-        String sql = "INSERT INTO laptops (title, price, description, brand_id, category_id, status, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO laptops (title, price, description, brand_id, category_id, status, image_url, quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, laptop.getTitle());
@@ -75,6 +75,7 @@ public class LaptopDAO {
             ps.setInt(5, laptop.getCategoryId());
             ps.setBoolean(6, laptop.isStatus());
             ps.setString(7, laptop.getImageUrl());
+            ps.setInt(8, laptop.getQuantity());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,7 +84,7 @@ public class LaptopDAO {
     }
     
     public boolean updateLaptop(Laptop laptop) {
-        String sql = "UPDATE laptops SET title = ?, price = ?, description = ?, brand_id = ?, category_id = ?, status = ?, image_url = ? WHERE laptop_id = ?";
+        String sql = "UPDATE laptops SET title = ?, price = ?, description = ?, brand_id = ?, category_id = ?, status = ?, image_url = ?, quantity = ? WHERE laptop_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, laptop.getTitle());
@@ -93,7 +94,8 @@ public class LaptopDAO {
             ps.setInt(5, laptop.getCategoryId());
             ps.setBoolean(6, laptop.isStatus());
             ps.setString(7, laptop.getImageUrl());
-            ps.setInt(8, laptop.getLaptopId());
+            ps.setInt(8, laptop.getQuantity());
+            ps.setInt(9, laptop.getLaptopId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -125,6 +127,7 @@ public class LaptopDAO {
         laptop.setImageUrl(rs.getString("image_url"));
         laptop.setBrandName(rs.getString("brand_name"));
         laptop.setCategoryName(rs.getString("category_name"));
+        laptop.setQuantity(rs.getInt("quantity"));
         return laptop;
     }
 
@@ -146,6 +149,21 @@ public class LaptopDAO {
             e.printStackTrace();
         }
         return laptops;
+    }
+    
+    // Giảm số lượng sản phẩm khi mua hàng
+    public boolean decreaseQuantity(int laptopId, int quantity) {
+        String sql = "UPDATE laptops SET quantity = quantity - ? WHERE laptop_id = ? AND quantity >= ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quantity);
+            ps.setInt(2, laptopId);
+            ps.setInt(3, quantity);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

@@ -69,6 +69,7 @@ public class AdminLaptopServlet extends HttpServlet {
             laptop.setBrandId(Integer.parseInt(request.getParameter("brandId")));
             laptop.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
             laptop.setStatus("1".equals(request.getParameter("status")));
+            laptop.setQuantity(Integer.parseInt(request.getParameter("quantity")));
             
             String imageUrl = uploadImage(request);
             laptop.setImageUrl(imageUrl != null ? imageUrl : "default.jpg");
@@ -83,6 +84,7 @@ public class AdminLaptopServlet extends HttpServlet {
             laptop.setBrandId(Integer.parseInt(request.getParameter("brandId")));
             laptop.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
             laptop.setStatus("1".equals(request.getParameter("status")));
+            laptop.setQuantity(Integer.parseInt(request.getParameter("quantity")));
             
             String imageUrl = uploadImage(request);
             if (imageUrl != null) {

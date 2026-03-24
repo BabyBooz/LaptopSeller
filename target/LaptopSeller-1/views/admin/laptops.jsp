@@ -74,7 +74,12 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Hình ảnh:</label>
+                    <label><i class="fas fa-box"></i> Số lượng:</label>
+                    <input type="number" name="quantity" min="0" value="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-image"></i> Hình ảnh:</label>
                     <input type="file" name="image" accept="image/*" required>
                 </div>
                 
@@ -91,6 +96,7 @@
                     <th>Giá</th>
                     <th>Hãng</th>
                     <th>Loại</th>
+                    <th><i class="fas fa-box"></i> Số lượng</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
                 </tr>
@@ -103,13 +109,14 @@
                         <td><fmt:formatNumber value="${laptop.price}" type="number" groupingUsed="true"/> VNĐ</td>
                         <td>${laptop.brandName}</td>
                         <td>${laptop.categoryName}</td>
+                        <td><strong>${laptop.quantity}</strong></td>
                         <td>${laptop.status ? 'Hiển thị' : 'Ẩn'}</td>
                         <td>
-                            <button onclick="editLaptop(${laptop.laptopId})" class="btn">Sửa</button>
+                            <button onclick="editLaptop(${laptop.laptopId})" class="btn"><i class="fas fa-edit"></i> Sửa</button>
                             <form method="post" action="${pageContext.request.contextPath}/admin/laptops" style="display: inline;">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="laptopId" value="${laptop.laptopId}">
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Xác nhận xóa?')">Xóa</button>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Xác nhận xóa?')"><i class="fas fa-trash"></i> Xóa</button>
                             </form>
                         </td>
                     </tr>

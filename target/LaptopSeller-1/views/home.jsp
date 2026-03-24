@@ -74,15 +74,32 @@
                             <h3>${laptop.title}</h3>
                             <p>${laptop.brandName} - ${laptop.categoryName}</p>
                             <p class="price"><fmt:formatNumber value="${laptop.price}" type="number" groupingUsed="true"/> VNĐ</p>
+                            <p>
+                                <c:choose>
+                                    <c:when test="${laptop.quantity > 0}">
+                                        <i class="fas fa-box"></i> Còn lại: <strong>${laptop.quantity}</strong> sản phẩm
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="fas fa-box-open"></i> <span style="color: #e74c3c; font-weight: bold;">Hết hàng</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
                             <p>${laptop.description}</p>
                             
                             <c:if test="${user.role == 'customer'}">
-                                <form method="post" action="${pageContext.request.contextPath}/cart">
-                                    <input type="hidden" name="action" value="add">
-                                    <input type="hidden" name="laptopId" value="${laptop.laptopId}">
-                                    <input type="number" name="quantity" value="1" min="1" style="width: 60px;">
-                                    <button type="submit" class="btn btn-primary">Thêm vào giỏ</button>
-                                </form>
+                                <c:choose>
+                                    <c:when test="${laptop.quantity > 0}">
+                                        <form method="post" action="${pageContext.request.contextPath}/cart">
+                                            <input type="hidden" name="action" value="add">
+                                            <input type="hidden" name="laptopId" value="${laptop.laptopId}">
+                                            <input type="number" name="quantity" value="1" min="1" max="${laptop.quantity}" style="width: 60px;">
+                                            <button type="submit" class="btn btn-primary"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button class="btn btn-danger" disabled><i class="fas fa-ban"></i> Hết hàng</button>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:if>
                         </div>
                     </c:forEach>
